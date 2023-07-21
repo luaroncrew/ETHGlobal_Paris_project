@@ -1,0 +1,92 @@
+/* You can add global styles to this file, and also import other style files */
+
+.verification-step {
+  height: 200px;
+  width: 300px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: black;
+}
+
+.validity-chain {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.header {
+  height: 150px;
+}
+
+.application-name {
+  font-size: 45px;
+}
+
+.entry-text {
+  font-size: 40px;
+}
+
+.verification-step-name {
+  margin-top: 10px;
+  border-bottom: solid black;
+  font-size: 25px;
+}
+
+
+.custom-select {
+  position: relative;
+  display: inline-block;
+  width: 200px; /* Adjust the width as per your requirement */
+}
+
+/* Styling the select arrow */
+.custom-select::after {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Styling the actual select element */
+.custom-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* On select focus */
+.custom-select select:focus {
+  outline: none;
+  border-color: #007bff; /* Change to your desired focus color */
+}
+
+/* On select hover */
+.custom-select select:hover {
+  border-color: #999; /* Change to your desired hover color */
+}
+
+.validation-input-field {
+  margin: 10px;
+}
+
+
+.verification-step-inputs-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80%;
+}
