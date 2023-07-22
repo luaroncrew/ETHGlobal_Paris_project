@@ -29,7 +29,8 @@ class AbstractVoteAlgo:
 
     def get_result(
             self,
-            subject: str
+            subject: str,
+            pvalue: float
     ):
         """
         Return the score of the vote on the given subject.
