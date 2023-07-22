@@ -1,7 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
-import "worldId" = "goerli.id.worldcoin.eth";
+interface IWorldID {
+    function verifyProof(
+        uint256 groupId,
+        uint256 root,
+        uint256 signalHash,
+        uint256 nullifierHash,
+        uint256 externalNullifierHash,
+        uint256[8] calldata proof
+    ) external view returns (bool);
+}
 
 contract SocratesVoting {
     
@@ -30,18 +39,20 @@ contract SocratesVoting {
     /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) internal nullifierHashes;
 
+    Vote[] public votes;
+
     /// @param _worldId The WorldID instance that will verify the proofs
     /// @param _appId The World ID app ID
     /// @param _actionId The World ID action ID
     constructor(
         IWorldID _worldId,
         string memory _appId,
-        string memory _action
+        string memory _actionId
     ) {
         worldId = _worldId;
-        externalNullifierHash = abi
-            .encodePacked(abi.encodePacked(_appId).hashToField(), _action)
-            .hashToField();
+        externalNullifierHash = hashToField(abi
+            .encodePacked(hashToField(abi.encodePacked(_appId)), _actionId));
+        
     }
 
     /// @param signal An arbitrary input from the user that cannot be tampered with. In this case, it is the user's wallet address.
@@ -67,7 +78,7 @@ contract SocratesVoting {
         worldId.verifyProof(
             root,
             1,
-            abi.encodePacked(signal).hashToField(),
+            hashToField(abi.encodePacked(signal)),
             nullifierHash,
             externalNullifierHash,
             proof
