@@ -75,7 +75,8 @@
               "browserTarget": "basicObservationFrontend:build:production"
             },
             "development": {
-              "browserTarget": "basicObservationFrontend:build:development"
+              "browserTarget": "basicObservationFrontend:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
