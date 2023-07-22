@@ -13,3 +13,4 @@ smart_contract/typechain-types
 smart_contract/cache
 smart_contract/artifacts
 
+smart_contract/hardhat.config.ts
