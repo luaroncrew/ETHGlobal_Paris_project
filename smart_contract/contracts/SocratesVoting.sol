@@ -20,6 +20,7 @@ contract SocratesVoting {
         uint8 vote; // uint8 is used to store values between 0 and 1 (inclusive)
     }
 
+    // Function to hash a value to a field element
     function hashToField(bytes memory value) internal pure returns (uint256) {
         return uint256(keccak256(abi.encodePacked(value))) >> 8;
     }
@@ -39,6 +40,7 @@ contract SocratesVoting {
     /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) internal nullifierHashes;
 
+    // Array of votes
     Vote[] public votes;
 
     /// @param _worldId The WorldID instance that will verify the proofs
