@@ -8,4 +8,12 @@ import {MatTabsModule} from '@angular/material/tabs';
 })
 export class AppComponent {
   title = 'basicObservationFrontend';
+  rate: boolean = false
+
+  observeTab() {
+    this.rate = false
+  }
+  rateTab() {
+    this.rate = true
+  }
 }

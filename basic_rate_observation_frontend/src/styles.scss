@@ -99,3 +99,36 @@
   height: 80%;
   align-items: center;
 }
+
+
+.vote-button-true {
+  width: 100px;
+  height: 50px;
+  margin: 15px;
+  font-size: 20px;
+  background-color: white;
+  color: black;
+  transition-duration: 0.4s;
+  border: 2px solid #4CAF50; /* Green */
+}
+
+.vote-button-false {
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  font-size: 18px;
+  background-color: white;
+  color: black;
+  transition-duration: 0.4s;
+  border: 2px solid orangered;
+}
+
+.vote-button-false:hover {
+  background-color: orangered;
+  color: white;
+}
+.vote-button-true:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+

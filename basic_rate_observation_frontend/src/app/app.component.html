@@ -2,11 +2,61 @@
 
 <div class="header">
   <div class="application-name">Data Validator</div>
+  <div>
+    <button (click)="rateTab()">Rate</button>
+    <button (click)="observeTab()">Observe</button>
+  </div>
   <div class="contacts"></div>
 </div>
 <div class="main-container">
-  <mat-tab-group>
-    <mat-tab label="Observe">
+    <div class="observe" *ngIf="rate">
+      <div class="entry-text">Rate data</div>
+      <div class="validity-chain">
+        <div class="verification-step">
+          <div class="verification-step-name">
+            Identify yourself
+          </div>
+          <div class="verification-step-inputs-container">
+            <button> Connect using world ID </button>
+          </div>
+        </div>
+        <img src="assets/right-arrow.png" alt="arrow" height="128" width="128">
+        <div class="verification-step">
+          <div class="verification-step-name">
+            Choose data for rate
+          </div>
+          <div class="verification-step-inputs-container">
+            <div class="validation-input-field">
+              <div class="custom-select">
+                <select>
+                  <option value="1">
+                    ETH is better than BTC
+                  </option>
+                  <option value="2">
+                    JS is the best programming language
+                  </option>
+                  <option value="3">
+                    Putin is terrorist
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <img src="assets/right-arrow.png" alt="arrow" height="128" width="128">
+        <div class="verification-step">
+          <div class="verification-step-name">
+            Verdict
+          </div>
+          <div class="verification-step-inputs-container">
+            <button class="vote-button-false">False</button>
+            <button class="vote-button-true">True</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="rate" *ngIf="!rate">
+    <div class="section">
       <div class="entry-text">Verification Steps:</div>
       <div class="validity-chain">
         <div class="verification-step">
@@ -78,11 +128,6 @@
           </div>
         </div>
       </div>
-    </mat-tab>
-    <mat-tab label="Rate">
-
-    </mat-tab>
-
-  </mat-tab-group>
-
+    </div>
+  </div>
 </div>
