@@ -1,4 +1,3 @@
-"use client"
 import Image from 'next/image'
 import { CredentialType, IDKitWidget, solidityEncode } from '@worldcoin/idkit' // add import for solidityEncode
 

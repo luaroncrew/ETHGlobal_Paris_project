@@ -1,23 +1,18 @@
+"use client"
 import { IDKitWidget, solidityEncode, CredentialType } from "@worldcoin/idkit"
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function Connect() {
 
-    const address: string = "0x000" // get the user's wallet address
+    const address: string = "0x9FA746b844747f77c6C54F4f88ab71048c608864" // get the user's wallet address
 
     const onSuccess = async (result: any) => {
-    // result is the result of the verification
-    // result.verified is true if the verification was successful
-    // result.claim is the claim that was verified
-    // result.claim_type is the type of claim that was verified
-    // result.claim_id is the id of the claim that was verified
-    // result.claim_hash is the hash of the claim that was verified
-    console.log(result)
+        console.log(result)
     }
 
     return (
         <>
-            <ConnectButton />
+            {/* <ConnectButton /> */}
             <main className="flex min-h-screen flex-col items-center justify-between p-24">
                 <IDKitWidget
                 app_id="app_staging_8483971b3b9a3a9c239bf16987cbf618" // must be an app set to on-chain
