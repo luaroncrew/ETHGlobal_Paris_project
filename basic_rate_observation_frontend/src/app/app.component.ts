@@ -32,6 +32,9 @@ export class AppComponent {
   rateTab() {
     this.rate = true
   }
+  connectWorldcoin() {
+    window.location.href = 'http://localhost:3000'
+  }
 
   async calculate_statistic(data_piece: string) {
     const url: string = this.inspectURL;
