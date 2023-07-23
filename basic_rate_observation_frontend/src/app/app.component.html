@@ -30,13 +30,10 @@
               <div class="custom-select">
                 <select>
                   <option value="1">
-                    ETH is better than BTC
+                    statement_1
                   </option>
                   <option value="2">
                     JS is the best programming language
-                  </option>
-                  <option value="3">
-                    Putin is terrorist
                   </option>
                 </select>
               </div>
@@ -49,8 +46,8 @@
             Verdict
           </div>
           <div class="verification-step-inputs-container">
-            <button class="vote-button-false">False</button>
-            <button class="vote-button-true">True</button>
+            <button class="vote-button-false" (click)="voteFalse()">False</button>
+            <button class="vote-button-true" (click)="voteTrue()">True</button>
           </div>
         </div>
       </div>
@@ -66,15 +63,12 @@
           <div class="verification-step-inputs-container">
             <div class="validation-input-field">
               <div class="custom-select">
-                <select>
+                <select [(ngModel)]="selectedDataPiece">
                   <option value="1">
-                    ETH is better than BTC
+                    statement_1
                   </option>
                   <option value="2">
                     JS is the best programming language
-                  </option>
-                  <option value="3">
-                    Putin is terrorist
                   </option>
                 </select>
               </div>
@@ -91,27 +85,14 @@
               Validation Algorithm
             </div>
             <select>
-              <option value="1">
-                Weighted vote (expertise based)
+              <option value="weighted_for_maths">
+                Additional weight for math experts
               </option>
-              <option value="2">
-                Universal vote (no weights)
+              <option value="uniform">
+                Uniform vote (no weights)
               </option>
-              <option value="3">
-                Limited vote
-              </option>
-            </select>
-          </div>
-          <div class="validation-input-field">
-            <div class="validation-input-field-name">
-              Risk *optionnal
-            </div>
-            <select>
-              <option value="1">
-                5%
-              </option>
-              <option value="2">
-                2.5%
+              <option value="42">
+                Universal
               </option>
             </select>
           </div>
@@ -123,8 +104,8 @@
           </div>
           <div class="verification-result-banner">
             <div style="font-size: 26px">
-              <button (click)="calculate_statistic('example_data')">Calculate!</button>
-              <div> {{ statistic }}</div>
+              <button (click)="calculate_statistic()">Calculate!</button>
+              <div>Calculated Statistic: {{ statistic }}</div>
             </div>
           </div>
         </div>

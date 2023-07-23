@@ -1,6 +1,5 @@
 import json
 from os import environ
-import traceback
 import logging
 import requests
 
@@ -11,9 +10,80 @@ rollup_server = environ["ROLLUP_HTTP_SERVER_URL"]
 logger.info(f"HTTP rollup_server url is {rollup_server}")
 
 
-def vote_statistic_calculation():
+def get_mock_vote_statistic():
     return 42
 
+
+MATH_EXPERTISE_FACTOR = 1.2
+
+
+def math_expert_weighted_votes(votes: list):
+    """
+    input in format:
+    votes = [
+            'address': string
+            'math_expert': bool,
+            'vote': number
+        },
+        {
+            'address': '0xkjhre2193u12d'
+            'math_expert': False,
+            'vote': 0
+        },
+        {
+            'address': '0xkjhre2193u12d'
+            'math_expert': False,
+            'vote': 1
+        },
+        ...
+    ]
+    :return: float, statistic
+    """
+    total_score = 0
+    for vote in votes:
+        if vote['math_expert'] is True:
+            total_score += vote['vote'] * MATH_EXPERTISE_FACTOR
+        else:
+            total_score += vote['vote']
+
+    statistic = total_score / len(votes)
+    return statistic
+
+
+def uniform_vote(votes: list):
+    """
+    input in format:
+    votes = [
+            'address': string
+            'math_expert': bool,
+            'vote': number
+        },
+        {
+            'address': '0xkjhre2193u12d'
+            'math_expert': False,
+            'vote': 0
+        },
+        {
+            'address': '0xkjhre2193u12d'
+            'math_expert': False,
+            'vote': 1
+        },
+        ...
+    ]
+    :return: float, statistic
+    """
+    total_score = 0
+    for vote in votes:
+        total_score += vote['vote']
+    statistic = total_score / len(votes)
+    return statistic
+
+
+voting_algorithms = {
+    'weighted_for_maths': math_expert_weighted_votes,
+    '42': get_mock_vote_statistic,
+    'uniform': uniform_vote
+}
 
 def hex2str(hex):
     """
@@ -29,64 +99,20 @@ def str2hex(str):
     return "0x" + str.encode("utf-8").hex()
 
 
-def handle_advance(data):
-    """
-    An advance request may be processed as follows:
-
-    1. A notice may be generated, if appropriate:
-
-    response = requests.post(rollup_server + "/notice", json={"payload": data["payload"]})
-    logger.info(f"Received notice status {response.status_code} body {response.content}")
-
-    2. During processing, any exception must be handled accordingly:
-
-    try:
-        # Execute sensible operation
-        op.execute(params)
-
-    except Exception as e:
-        # status must be "reject"
-        status = "reject"
-        msg = "Error executing operation"
-        logger.error(msg)
-        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
-
-    finally:
-        # Close any resource, if necessary
-        res.close()
-
-    3. Finish processing
-
-    return status
-    """
-
-    """
-    The sample code from the Echo DApp simply generates a notice with the payload of the
-    request and print some log messages.
-    """
-
-    logger.info(f"Received advance request data {data}")
-
-    status = "accept"
-    try:
-        logger.info("Adding notice")
-        response = requests.post(rollup_server + "/notice", json={"payload": data["payload"]})
-        logger.info(f"Received notice status {response.status_code} body {response.content}")
-
-    except Exception as e:
-        status = "reject"
-        msg = f"Error processing data {data}\n{traceback.format_exc()}"
-        logger.error(msg)
-        response = requests.post(rollup_server + "/report", json={"payload": str2hex(msg)})
-        logger.info(f"Received report status {response.status_code} body {response.content}")
-
-    return status
-
-
 def handle_inspect(data):
-    logger.info(f"Received inspect request data {data}")
+    logger.info(f"Received inspect request data {data}  type: {type(data)}")
     logger.info("Adding report")
-    statistic = vote_statistic_calculation()  # will be extended
+
+    # this must have been implemented but errors
+    # in data transfer have appeared at the last moment
+    # this code was responsible for the choice of the calculation method
+
+    # chosen_algorithm = data['calculation_method']
+    # votes = data['votes']
+    # statistic_calculation_function = voting_algorithms[chosen_algorithm]
+    # statistic = statistic_calculation_function(votes)
+
+    statistic = voting_algorithms['42']()
     jsonstr = json.dumps({"calculated_statistic": statistic})
     response = requests.post(rollup_server + "/report", json={"payload": str2hex(jsonstr)})
     logger.info(f"Received report status {response.status_code}")
@@ -94,7 +120,6 @@ def handle_inspect(data):
 
 
 handlers = {
-    "advance_state": handle_advance,
     "inspect_state": handle_inspect,
 }
 
