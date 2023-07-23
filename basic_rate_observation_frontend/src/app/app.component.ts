@@ -75,6 +75,9 @@ export class AppComponent {
   rateTab() {
     this.rate = true
   }
+  connectWorldcoin() {
+    window.location.href = 'http://localhost:3000'
+  }
 
   voteFalse() {
     // SC call for voting false

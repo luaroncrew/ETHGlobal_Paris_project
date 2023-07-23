@@ -18,3 +18,4 @@ smart_contract/hardhat.config.ts
 */.idea
 
 */venv
+worldcoin_frontend/.env
