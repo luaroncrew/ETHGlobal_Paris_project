@@ -21,6 +21,7 @@ contract SocratesVoting {
         string identifier;
         string data_piece;
         uint8 vote; // uint8 is used to store values between 0 and 1 (inclusive)
+        address caller;
     }
 
     // Function to hash a value to a field element, used for converting data
@@ -104,7 +105,8 @@ contract SocratesVoting {
         Vote memory newVote = Vote({
             identifier: identifier,
             data_piece: data_piece,
-            vote: voteValue
+            vote: voteValue,
+            caller: msg.sender
         });
         votes.push(newVote);
     }
