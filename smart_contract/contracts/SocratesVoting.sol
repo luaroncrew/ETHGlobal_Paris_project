@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+// Interface needed to use Worldcoin ID feature to verify the votes
 interface IWorldID {
     function verifyProof(
         uint256 groupId,
@@ -14,38 +15,41 @@ interface IWorldID {
 
 contract SocratesVoting {
     
+    // A vote consists in an identifier (i.e. the voter), a data piece and the
+    // weight given to the vote
     struct Vote {
         string identifier;
         string data_piece;
         uint8 vote; // uint8 is used to store values between 0 and 1 (inclusive)
     }
 
-    // Function to hash a value to a field element
+    // Function to hash a value to a field element, used for converting data
+    // to uint256
     function hashToField(bytes memory value) internal pure returns (uint256) {
         return uint256(keccak256(abi.encodePacked(value))) >> 8;
     }
 
-    /// @notice Thrown when attempting to reuse a nullifier
+    // Thrown when attempting to reuse a nullifier
     error InvalidNullifier();
 
-    /// @dev The address of the World ID Router contract that will be used for verifying proofs
+    // The address of the World ID Router contract that will be used for verifying proofs
     IWorldID internal immutable worldId;
 
-    /// @dev The keccak256 hash of the externalNullifier (unique identifier of the action performed), combination of appId and action
+    // The keccak256 hash of the externalNullifier (unique identifier of the action performed), combination of appId and action
     uint256 internal immutable externalNullifierHash;
 
-    /// @dev The World ID group ID (1 for Orb-verified, 0 for Phone-verified)
+    // The World ID group ID (1 for Orb-verified, 0 for Phone-verified)
     uint256 internal immutable groupId = 1;
 
-    /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
+    // Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) internal nullifierHashes;
 
-    // Array of votes
+    // Array storing the votes
     Vote[] public votes;
 
-    /// @param _worldId The WorldID instance that will verify the proofs
-    /// @param _appId The World ID app ID
-    /// @param _actionId The World ID action ID
+    // _worldId: The WorldID instance that will verify the proofs
+    // _appId: The World ID app ID
+    // _actionId: The World ID action ID
     constructor(
         IWorldID _worldId,
         string memory _appId,
@@ -57,10 +61,15 @@ contract SocratesVoting {
         
     }
 
-    /// @param signal An arbitrary input from the user that cannot be tampered with. In this case, it is the user's wallet address.
-    /// @param root The root (returned by the IDKit widget).
-    /// @param nullifierHash The nullifier hash for this proof, preventing double signaling (returned by the IDKit widget).
-    /// @param proof The zero-knowledge proof that demonstrates the claimer is registered with World ID (returned by the IDKit widget).
+    // Verify and execute a vote.
+    //
+    // signal: An arbitrary input from the user that cannot be tampered with. In this case, it is the user's wallet address.
+    // root: The root (returned by the IDKit widget).
+    // nullifierHash: The nullifier hash for this proof, preventing double signaling (returned by the IDKit widget).
+    // proof: The zero-knowledge proof that demonstrates the claimer is registered with World ID (returned by the IDKit widget).
+    // identifier: identifier of the voter
+    // data_piece: object of the vote
+    // voteValue: value of the vote
     function verifyAndExecute(
         address signal,
         uint256 root,
@@ -71,12 +80,17 @@ contract SocratesVoting {
         uint8 voteValue
     ) public {
 
-        // First, we make sure this person hasn't done this before
+        // First, we make sure that each voter can only vote once
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
+        // Record the nullifier hash of the voter to counter Sibyl attacks
+        nullifierHashes[nullifierHash] = true;
+
+	// The vote value should be comprised between 0 and 1
         require(voteValue <= 1, "Vote value must be 0 or 1");
 
-        // We now verify the provided proof is valid and the user is verified by World ID
+        // Then, we use Worldcoin's samart contract to verify the validity of
+	// the zero-knowledge proof
         worldId.verifyProof(
             root,
             1,
@@ -86,19 +100,16 @@ contract SocratesVoting {
             proof
         );
 
-        // Function to vote and append a new object to "votes" array
+        // Append the vote to the list of all votes
         Vote memory newVote = Vote({
             identifier: identifier,
             data_piece: data_piece,
             vote: voteValue
         });
-        
         votes.push(newVote);
-        // We now record the user has done this, so they can't do it again (sybil-resistance)
-        nullifierHashes[nullifierHash] = true;
     }
 
-    // Function to read and return all the votes
+    // Return all the votes
     function getVotes() public view returns (Vote[] memory) {
         return votes;
     }
