@@ -22,6 +22,7 @@
     "@angular/router": "^14.0.0",
     "@ethereum-attestation-service/eas-sdk": "^0.29.1",
     "cors": "^2.8.5",
+    "ethers": "^6.6.4",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

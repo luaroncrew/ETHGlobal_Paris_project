@@ -107,12 +107,12 @@ def handle_inspect(data):
     # in data transfer have appeared at the last moment
     # this code was responsible for the choice of the calculation method
 
-    # chosen_algorithm = data['calculation_method']
-    # votes = data['votes']
-    # statistic_calculation_function = voting_algorithms[chosen_algorithm]
-    # statistic = statistic_calculation_function(votes)
-
-    statistic = voting_algorithms['42']()
+    data = json.loads(hex2str(data['payload']))
+    logger.info(data)
+    chosen_algorithm = data['calculationMethod']
+    votes = data['votes']
+    statistic_calculation_function = voting_algorithms[str(chosen_algorithm)]
+    statistic = statistic_calculation_function(votes)
     jsonstr = json.dumps({"calculated_statistic": statistic})
     response = requests.post(rollup_server + "/report", json={"payload": str2hex(jsonstr)})
     logger.info(f"Received report status {response.status_code}")
