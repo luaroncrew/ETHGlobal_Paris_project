@@ -1,8 +1,4 @@
 import { Component } from '@angular/core';
-import { EAS, Offchain, SchemaEncoder, SchemaRegistry } from "@ethereum-attestation-service/eas-sdk";
-import { getDefaultProvider } from 'ethers';
-import {SignerOrProvider} from "@ethereum-attestation-service/eas-sdk/dist/transaction";
-
 
 function hex2a(hexx: string) {
   var hex = hexx.toString();
@@ -12,6 +8,10 @@ function hex2a(hexx: string) {
   return str;
 }
 
+/**
+ * this function allows to fetch the data from the EAS indexer and verify the expertise of
+ * one of the addresses from the voters list
+ */
 async function fetchAttestations() {
   const url = 'https://sepolia.easscan.org/graphql';
   const headers = {
@@ -52,47 +52,6 @@ async function fetchAttestations() {
 }
 
 
-// in production this part must be assembled
-// out of attestations from EAS and read method of Socrate protocol SC
-const MOCK_VOTERS = [
-  {
-    data: 1,
-    address: '0xkjhre2193u1dfd',
-    math_expert: false,
-    vote: 0
-  },
-  {
-    data: 1,
-    address: '0x9FA746b844747f77c6C54F4f88ab71048c608864', // gwenole.eth
-    math_expert: false,
-    vote: 0
-  },
-  {
-    data: 1,
-    address: '0xkjhredf2193u12d',
-    math_expert: false,
-    vote: 1
-  },
-  {
-    data: 1,
-    address: '0xkjhrdfse2193u12d',
-    math_expert: true,
-    vote: 1
-  },
-  {
-    data: 1,
-    address: '0xkjhrdfse2193u12d',
-    math_expert: true,
-    vote: 1
-  },
-  {
-    data: 1,
-    address: '0xkjhrdfse2193u12d',
-    math_expert: true,
-    vote: 1
-  },
-]
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -128,7 +87,6 @@ export class AppComponent {
   async calculate_statistic() {
     const url: string = this.inspectURL;
 
-
     // get the attestation for one of the addresses and verify it
     const attestation = await fetchAttestations();
     const mathExpert = (Boolean(Number(attestation['data']['attestation']['data'].slice(-1))))
@@ -138,9 +96,45 @@ export class AppComponent {
       votes: [
         {
           data: 1,
-          address: '0x9FA746b844747f77c6C54F4f88ab71048c608864', // gwen
+          address: '0x9FA746b844747f77c6C54F4f88ab71048c608864',
           vote: 1,
-          math_expert: mathExpert
+          math_expert: mathExpert // this parameter is verified with the attestation signed on-chain
+        },
+        {
+          data: 1,
+          address: '0xkjhre2193u1dfd',
+          math_expert: false,
+          vote: 0
+        },
+        {
+          data: 1,
+          address: '0x9FA746b844747f77c6C54F4f88ab71048c608864',
+          math_expert: false,
+          vote: 0
+        },
+        {
+          data: 1,
+          address: '0xkjhredf2193u12d',
+          math_expert: false,
+          vote: 0.5
+        },
+        {
+          data: 1,
+          address: '0xkjhrdfse2193u12d',
+          math_expert: true,
+          vote: 1
+        },
+        {
+          data: 1,
+          address: '0xkjhrdfse2193u12d',
+          math_expert: true,
+          vote: 0
+        },
+        {
+          data: 1,
+          address: '0xkjhrdfse2193u12d',
+          math_expert: true,
+          vote: 0.3
         }
       ]
     }
