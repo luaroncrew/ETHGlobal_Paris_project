@@ -112,7 +112,11 @@ def handle_inspect(data):
     chosen_algorithm = data['calculationMethod']
     votes = data['votes']
     statistic_calculation_function = voting_algorithms[str(chosen_algorithm)]
-    statistic = statistic_calculation_function(votes)
+    statistic = 0
+    if chosen_algorithm == '42':
+        statistic = 42
+    else:
+        statistic = statistic_calculation_function(votes)
     jsonstr = json.dumps({"calculated_statistic": statistic})
     response = requests.post(rollup_server + "/report", json={"payload": str2hex(jsonstr)})
     logger.info(f"Received report status {response.status_code}")

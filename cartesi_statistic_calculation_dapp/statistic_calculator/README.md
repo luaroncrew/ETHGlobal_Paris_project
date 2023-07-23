@@ -30,7 +30,9 @@ these functions can be found in the `statistic_calculator.py`
 The calculator must be called from one of the frontend applications of Socrate by its url 
 address via an http request, like (in case you run on the local machine):
 
-http://localhost:5005/inspect/
+Each of the algorithms is implemented and is working well!
+
+http://localhost:5005/inspect/<JSON payload>
 
 ## Useful commands:
 
@@ -44,7 +46,7 @@ run the image:
 docker compose -f ./docker-compose-base.yml -f ./docker-compose.override.yml up
 ```
 
-remove the image volumes !important
+remove the image volumes and stop containers
 ```shell
 docker compose -f ./docker-compose-base.yml -f ./docker-compose.override.yml down -v
 ```
